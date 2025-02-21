@@ -126,7 +126,6 @@ class Velodrome(Wallet):
 
         commands, inputs, value = self._build_erc20_swap(amount_in, token_in, token_out)
 
-        # 3. Make approve
         tx_label = f"Approve {amount_in / 10 ** decimals:.6f} {symbol}"
         self.approve(
             token_in,
@@ -135,7 +134,6 @@ class Velodrome(Wallet):
             tx_label=f"{self.label} {tx_label} [{self.tx_count}]",
         )
 
-        # 4. Build transaction
         contract_tx = self.router.functions.execute(commands, inputs).build_transaction(
             self.get_tx_data(value=value)
         )
