@@ -21,8 +21,8 @@ FEE_BIPS = 100  # 0.01% fee tier
 
 
 class Velodrome(Wallet):
-    def __init__(self, pk, counter, proxy):
-        super().__init__(pk, counter, proxy)
+    def __init__(self, pk, _id, proxy):
+        super().__init__(pk, _id, proxy)
 
         self.label += "Velodrome |"
         self.router = self.get_contract(

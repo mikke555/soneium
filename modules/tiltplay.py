@@ -3,8 +3,8 @@ from modules.wallet import Wallet
 
 
 class TiltPlay(Wallet):
-    def __init__(self, pk, counter, proxy):
-        super().__init__(pk, counter, proxy)
+    def __init__(self, pk, _id, proxy):
+        super().__init__(pk, _id, proxy)
 
         self.label += "TiltPlay |"
         contract_abi = [

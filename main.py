@@ -68,6 +68,11 @@ def get_accounts() -> list[dict]:
     if settings.SHUFFLE_WALLETS:
         random.shuffle(accounts)
 
+    accounts = [
+        {**account, "_id": f"[{index}/{len(accounts)}]"}
+        for index, account in enumerate(accounts, start=1)
+    ]
+
     return accounts
 
 
@@ -83,8 +88,6 @@ def main():
     accounts = get_accounts()
 
     for index, account in enumerate(accounts, start=1):
-        account["counter"] = f"[{index}/{len(accounts)}]"
-
         tx_status = run(action, account)
 
         if tx_status and index < len(accounts):

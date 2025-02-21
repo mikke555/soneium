@@ -18,14 +18,14 @@ class Wallet(HttpClient):
     def __init__(
         self,
         pk: str,
-        counter: str = None,
+        _id: str = None,
         proxy: str = None,
         chain: Network = soneium,
     ):
         super().__init__(proxy=proxy)
         self.account = Account.from_key(pk)
         self.address = self.account.address
-        self.label = f"{counter} {self.address} | "
+        self.label = f"{_id} {self.address} | "
 
         self.chain = chain
         self.w3 = Web3(HTTPProvider(chain.rpc_url))
