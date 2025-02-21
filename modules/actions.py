@@ -1,3 +1,5 @@
+import random
+
 from .config import SONUS_TOKENS, VELODROME_TOKENS, WETH
 from .owlto import Owlto
 from .sonus import Sonus
@@ -38,3 +40,10 @@ def checkin_owlto(account):
 def checkin_tiltplay(account):
     dapp = TiltPlay(**account)
     return dapp.check_in()
+
+
+def random_action(account):
+    modules = [swap_velodrome, swap_sonus, wrap_eth, checkin_owlto, checkin_tiltplay]
+    action = random.choice(modules)
+
+    return action(account)

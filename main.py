@@ -11,6 +11,7 @@ from modules.utils import read_file, sleep
 
 def get_action() -> str:
     choices = [
+        Choice("Random action", random_action),
         Choice("Swap on Velodrome", swap_velodrome),
         Choice("Swap on Sonus", swap_sonus),
         Choice("Owlto check-in", checkin_owlto),
@@ -31,7 +32,7 @@ def get_action() -> str:
     )
 
     action = questionary.select(
-        "Soneium",
+        "Soneium: select an action to perform",
         choices=choices,
         style=custom_style,
     ).ask()
