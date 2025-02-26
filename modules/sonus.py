@@ -42,8 +42,8 @@ class Sonus(Wallet):
 
         return self.send_tx(
             contract_tx,
-            tx_label=f"{self.label} Swap {ether(amount_in):.6f} ETH -> {token_out_symbol} [{self.tx_count}]",
-            gas_multiplier=1.1,
+            tx_label=f"{self.label} Swap {ether(amount_in):.6f} ETH -> {token_out_symbol}",
+            gas_multiplier=1.2,
         )
 
     def swap_erc20(self, token_in: str, token_out: str):
@@ -57,24 +57,22 @@ class Sonus(Wallet):
             logger.warning(f"{self.label} No {symbol} tokens to swap \n")
             return
 
-        # Make approve
         tx_label = f"Approve {amount_in / 10 ** decimals:.6f} {symbol}"
         self.approve(
             token_in,
             self.router.address,
             amount_in,
-            tx_label=f"{self.label} {tx_label} [{self.tx_count}]",
+            tx_label=f"{self.label} {tx_label}",
         )
 
-        # Build transaction
         contract_tx = self.router.functions.swapExactTokensForETH(
             amount_in, amount_out, path, self.address, self._get_tx_deadline()
         ).build_transaction(self.get_tx_data())
 
         return self.send_tx(
             contract_tx,
-            tx_label=f"{self.label} Swap {amount_in / 10**decimals:.8f} {symbol} -> ETH [{self.tx_count}]",
-            gas_multiplier=1.1,
+            tx_label=f"{self.label} Swap {amount_in / 10**decimals:.8f} {symbol} -> ETH",
+            gas_multiplier=1.2,
         )
 
     def swap(self, token_in, token_out):

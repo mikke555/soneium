@@ -3,16 +3,18 @@
 ########################################################################
 
 USE_PROXY = False
-SHUFFLE_WALLETS = False
+SHUFFLE_WALLETS = True
 
-SLEEP_BETWEEN_WALLETS = [10, 20]
+SLEEP_BETWEEN_WALLETS = [5, 15]
 SLEEP_BETWEEN_ACTIONS = [20, 40]
 
 ########################################################################
 #                           Action Settings                            #
 ########################################################################
 
-SWAP_AMOUNT = [0.00038, 0.00075]  # 1- 2$
+SWAP_AMOUNT = [0.0005, 0.0024]  # 1- 2$
 SWAP_BACK_PERCENTAGE = [0.97, 0.98]  # 97 - 98%
 
-WRAP_AMOUNT = [0.00038, 0.00075]  # 1- 2$
+WRAP_AMOUNT = [0.00036, 0.000717]  # 1- 2$
+
+SUPPLY_AMOUNT = [0.000042, 0.00011]  # 0.1- 0.25$

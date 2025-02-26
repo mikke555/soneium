@@ -14,10 +14,16 @@ def get_action() -> str:
         Choice("Random action", random_action),
         Choice("Swap on Velodrome", swap_velodrome),
         Choice("Swap on Sonus", swap_sonus),
-        Choice("Owlto check-in", checkin_owlto),
-        Choice("TiltPlay check-in", checkin_tiltplay),
         Choice("Wrap/unwrap ETH", wrap_eth),
-        Choice("Quit", "quit"),
+        Choice("Supply ETH on Sake Finance", supply_eth_sake),
+        Choice("Toggle collateral on Sake Finance", toggle_collateral_sake),
+        Choice("Create Asset Manager on Kyo Finance", create_asset_manager_kyo),
+        Choice("Check-in with Owlto", checkin_owlto),
+        Choice("Check-in with TiltPlay", checkin_tiltplay),
+        Choice("Check-in with OnChainGM", send_gm_onchaingm),
+        Choice("Mint Arcas Champions SBT", mint_arcas_champions),
+        Choice("Mint OmniHub x Soneium", mint_omnihub),
+        Choice(">>> Quit", "quit"),
     ]
 
     custom_style = questionary.Style(
@@ -32,7 +38,7 @@ def get_action() -> str:
     )
 
     action = questionary.select(
-        "Soneium: select an action to perform",
+        "Action",
         choices=choices,
         style=custom_style,
     ).ask()

@@ -23,7 +23,7 @@ class Wrapper(Wallet):
         self.contract = self.get_contract(WETH, abi=contract_abi)
 
     def deposit(self):
-        amount = wei(random.uniform(*settings.SWAP_AMOUNT))
+        amount = wei(random.uniform(*settings.WRAP_AMOUNT))
 
         contract_tx = self.contract.functions.deposit().build_transaction(
             self.get_tx_data(value=amount)
@@ -31,7 +31,7 @@ class Wrapper(Wallet):
 
         return self.send_tx(
             contract_tx,
-            tx_label=f"{self.label} Deposit {amount / 10**18:.6f} WETH [{self.tx_count}]",
+            tx_label=f"{self.label} Deposit {amount / 10**18:.6f} WETH",
         )
 
     def redeem(self):
@@ -48,7 +48,7 @@ class Wrapper(Wallet):
 
         return self.send_tx(
             contract_tx,
-            tx_label=f"{self.label} Redeem {amount / 10 ** decimals:.6f} {symbol} [{self.tx_count}]",
+            tx_label=f"{self.label} Redeem {amount / 10 ** decimals:.6f} {symbol}",
         )
 
     def deposit_and_redeem(self):

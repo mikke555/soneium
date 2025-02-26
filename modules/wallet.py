@@ -37,7 +37,7 @@ class Wallet(HttpClient):
 
     @property
     def tx_count(self):
-        return self.w3.eth.get_transaction_count(self.address) + 1
+        return self.w3.eth.get_transaction_count(self.address)
 
     def sign_message(self, message: str) -> str:
         message_encoded = encode_defunct(text=message)
@@ -115,12 +115,14 @@ class Wallet(HttpClient):
 
             signed_tx = self.sign_tx(tx)
             tx_hash = self.w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-            logger.info(f"{tx_label} | {self.chain.explorer}/tx/0x{tx_hash.hex()}")
+            logger.info(
+                f"{tx_label} [{self.tx_count}] | {self.chain.explorer}/tx/0x{tx_hash.hex()}"
+            )
 
             tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
 
             if tx_receipt.status:
-                logger.success(f"{tx_label} | Tx confirmed \n")
+                logger.success(f"{tx_label} [{self.tx_count}] | Tx confirmed \n")
                 return tx_receipt.status
             else:
                 raise Web3Exception(f"Tx Failed \n")
