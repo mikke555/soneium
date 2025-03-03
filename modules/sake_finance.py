@@ -30,7 +30,7 @@ class SakeFinance(Wallet):
 
         if aWETH_balance:
             logger.warning(
-                f"{self.label} Already supplied {ether(aWETH_balance)} ETH \n"
+                f"{self.label} Already supplied {ether(aWETH_balance):.6f} ETH \n"
             )
             return False
 
@@ -50,8 +50,8 @@ class SakeFinance(Wallet):
         aWETH_balance = self.get_supplied_balance()
 
         if not aWETH_balance:
-            logger.warning(f"{self.label} You need to supply collateral first \n")
-            return False
+            logger.warning(f"{self.label} You need to supply collateral first")
+            return self.deposit_eth()
 
         contract_tx = self.pool_contract.functions.setUserUseReserveAsCollateral(
             WETH, use_as_collateral
@@ -59,5 +59,5 @@ class SakeFinance(Wallet):
 
         return self.send_tx(
             contract_tx,
-            tx_label=f"{self.label} Set Collateral: {use_as_collateral}",
+            tx_label=f"{self.label} Toggle collateral to {use_as_collateral}",
         )

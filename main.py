@@ -61,9 +61,6 @@ def get_accounts() -> list[dict]:
         logger.warning("proxies.txt is empty")
         quit()
 
-    if not settings.USE_PROXY:
-        logger.warning("You are not using proxies")
-
     accounts = [
         {
             "pk": key,
@@ -84,10 +81,27 @@ def get_accounts() -> list[dict]:
 
 
 def run(action, account):
-    try:
-        return action(account)
-    except Exception as err:
-        logger.error(f"{run.__name__}: {err}")
+    max_attempts = 3
+    attempts = 0
+
+    while attempts < max_attempts:
+        try:
+            success = action(account)
+
+            if success:
+                return True
+
+            attempts += 1
+            random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
+
+        except Exception as err:
+            logger.error(f"Error: {err} \n")
+            random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
+            attempts += 1
+
+    else:
+        logger.warning(f"Exceeded max attempts ({max_attempts}), moving on...\n")
+        return False
 
 
 def main():
