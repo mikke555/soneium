@@ -65,6 +65,7 @@ def get_accounts() -> list[dict]:
         {
             "pk": key,
             "proxy": proxies[index % len(proxies)] if settings.USE_PROXY else None,
+            "_id": None,  # To be set after shuffling
         }
         for index, key in enumerate(keys)
     ]
@@ -72,36 +73,17 @@ def get_accounts() -> list[dict]:
     if settings.SHUFFLE_WALLETS:
         random.shuffle(accounts)
 
-    accounts = [
-        {**account, "_id": f"[{index}/{len(accounts)}]"}
-        for index, account in enumerate(accounts, start=1)
-    ]
+    for index, account in enumerate(accounts, start=1):
+        account["_id"] = f"[{index}/{len(accounts)}]"
 
     return accounts
 
 
 def run(action, account):
-    max_attempts = 3
-    attempts = 0
-
-    while attempts < max_attempts:
-        try:
-            success = action(account)
-
-            if success:
-                return True
-
-            attempts += 1
-            random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
-
-        except Exception as err:
-            logger.error(f"Error: {err} \n")
-            random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
-            attempts += 1
-
-    else:
-        logger.warning(f"Exceeded max attempts ({max_attempts}), moving on...\n")
-        return False
+    try:
+        return action(account)
+    except Exception as err:
+        logger.error(f"Error: {err}")
 
 
 def main():

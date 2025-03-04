@@ -1,6 +1,7 @@
 import random
 
 import settings
+from modules.logger import logger
 
 from .arcas_champions import ArcasChampions
 from .config import SONUS_TOKENS, VELODROME_TOKENS, WETH
@@ -43,7 +44,7 @@ def toggle_collateral_sake(account):
     dapp = SakeFinance(**account)
 
     if not dapp.toggle_collateral():
-        return
+        return False
 
     random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
     return dapp.toggle_collateral(use_as_collateral=True)
@@ -53,7 +54,7 @@ def supply_eth_sake(account):
     dapp = SakeFinance(**account)
 
     if not dapp.deposit_eth():
-        return
+        return False
 
     random_sleep(*settings.SLEEP_BETWEEN_ACTIONS)
     return toggle_collateral_sake(account)
@@ -89,20 +90,39 @@ def mint_arcas_champions(account):
     return dapp.mint()
 
 
-def random_action(account):
-    modules = [
-        swap_velodrome,
-        swap_sonus,
-        wrap_eth,
-        toggle_collateral_sake,
-        supply_eth_sake,
-        checkin_owlto,
-        checkin_tiltplay,
-        mint_omnihub,
-        send_gm_onchaingm,
-        create_asset_manager_kyo,
-        mint_arcas_champions,
-    ]
-    action = random.choice(modules)
+class RandomActionSelector:
+    """Selects and executes a random action until one returns a value other than False."""
 
-    return action(account)
+    def __init__(self):
+        self.modules = [
+            swap_velodrome,
+            swap_sonus,
+            wrap_eth,
+            toggle_collateral_sake,
+            supply_eth_sake,
+            checkin_owlto,
+            checkin_tiltplay,
+            mint_omnihub,
+            send_gm_onchaingm,
+            create_asset_manager_kyo,
+            # mint_arcas_champions,  # mint closed
+        ]
+
+    def __call__(self, account):
+        available_modules = self.modules.copy()
+        random.shuffle(available_modules)
+
+        for action in available_modules:
+            try:
+                result = action(account)
+            except Exception as e:
+                logger.error(f"Action {action.__name__} failed with error: {e} \n")
+                continue
+
+            if result is not False:
+                return result
+
+        return False  # All actions have returned False
+
+
+random_action = RandomActionSelector()
