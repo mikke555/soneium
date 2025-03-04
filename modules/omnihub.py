@@ -9,7 +9,7 @@ class OmniHub(Wallet):
         super().__init__(pk, _id, proxy)
 
         self.label += "OmniHub x Soneium |"
-        self.value = 0.0003
+        self.value = 0.00011
         contract_abi = [
             {
                 "type": "function",
