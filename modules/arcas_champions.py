@@ -8,14 +8,30 @@ class ArcasChampions(Wallet):
         super().__init__(pk, _id, proxy)
 
         self.label += "Arcas Champions |"
-        contract_abi = [{"type": "function", "name": "mint", "inputs": []}]
+        contract_abi = [
+            {"type": "function", "name": "mint", "inputs": []},
+            {
+                "type": "function",
+                "name": "mintingLocked",
+                "inputs": [],
+                "outputs": [{"name": "", "type": "bool"}],
+            },
+        ]
         self.contract = self.get_contract(ARCAS_CHAMPIONS_SBT, abi=contract_abi)
 
     @property
     def minted_qty(self) -> int:
         return self.get_balance(ARCAS_CHAMPIONS_SBT)
 
+    @property
+    def minting_locked(self) -> bool:
+        return self.contract.functions.mintingLocked().call()
+
     def mint(self):
+        if self.minting_locked:
+            logger.warning(f"{self.label} Minting locked \n")
+            return False
+
         if self.minted_qty > 0:
             logger.warning(f"{self.label} Already minted {self.minted_qty}\n")
             return False
